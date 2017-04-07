@@ -3,16 +3,11 @@ import {Map, fromJS} from 'immutable';
 import {API_URL} from '../config';
 
 export const INIT_STATE = fromJS({
-	email: null,
-	password: null,
-	uid: null,
 	token: null,
-
 	login: {
 		pending: false,
 		error: null
 	},
-
 	logout:{
 		pending: false,
 		error: null
@@ -37,15 +32,10 @@ export const type = {
 export default function reducer(state=INIT_STATE, action){
 	switch(action.type){
 		case type.LOGIN_PENDING:
-      return state.mergeDeep({
-        email: action.payload.email,
-        password: action.payload.password,
-        login:{pending: true}
-      });
+      return state.setIn(['login', 'pending'], true);
 
 		case type.LOGIN_FULFILLED:
       return state.mergeDeep({
-        uid: action.payload.uid,
         token: action.payload.token,
         login: {
           pending:false,

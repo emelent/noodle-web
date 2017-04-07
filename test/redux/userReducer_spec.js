@@ -14,16 +14,11 @@ function generateTest(description, actions, initialState, expectedState){
 const email     = 'test@gmail.com';
 const password  = 'password1';
 const token     = 'token';
-const uid       = 1;
 const error     = 'error';
 
 const states = {
   LOGIN_PENDING     : fromJS({
-                        email,
-                        password,
-                        uid: null,
                         token: null,
-
                         login: {
                           pending: true,
                           error: null
@@ -35,32 +30,22 @@ const states = {
                         }
                       }),
   LOGIN_FULFILLED   : fromJS({
-                        email,
-                        password,
-                        uid,
                         token,
-
                         login: {
                           pending: false,
                           error: null
                         },
-
                         logout:{
                           pending: false,
                           error: null
                         }
                       }),
   LOGIN_REJECTED    : fromJS({
-                        email,
-                        password,
-                        uid: null,
                         token: null,
-
                         login: {
                           pending: false,
                           error
                         },
-
                         logout:{
                           pending: false,
                           error: null
@@ -69,32 +54,22 @@ const states = {
   USER_RESET        : INIT_STATE,
   LOGOUT_FULFILLED  : INIT_STATE,
   LOGOUT_PENDING    : fromJS({
-                        email,
-                        password,
-                        uid,
                         token,
-
                         login: {
                           pending: true,
                           error: null
                         },
-
                         logout:{
                           pending: true,
                           error: null
                         }
                       }),
   LOGOUT_REJECTED   : fromJS({
-                        email,
-                        password,
-                        uid,
                         token,
-
                         login: {
                           pending: false,
                           error
                         },
-
                         logout:{
                           pending: false,
                           error 
@@ -109,10 +84,7 @@ describe('user reducer', () => {
     //description
     `handles ${type.LOGIN_PENDING} action`,
     //actions
-    [{
-      type: type.LOGIN_PENDING,
-      payload: {email, password}
-    }],
+    [{type: type.LOGIN_PENDING}],
     //initial state
     INIT_STATE,
     //expected state
@@ -124,7 +96,7 @@ describe('user reducer', () => {
     `handles ${type.LOGIN_FULFILLED} action`,
     [{
       type: type.LOGIN_FULFILLED,
-      payload: {uid, token}
+      payload: {token}
     }],
     states.LOGIN_PENDING,
     states.LOGIN_FULFILLED
