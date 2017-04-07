@@ -1,0 +1,29 @@
+.example-appear{
+  opacity: 0.01;
+}
+
+.example-appear.example-appear-active{
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+
+.slide-appear{
+  transform: translateX(-100%);
+}
+
+.slide-appear.slide-appear-active{
+  transform: translateX(0%);
+  transition: transform 500ms ease-in;
+}
+
+@keyframes up-and-down{
+  0%{
+    transform: translateY(-20%);
+  }
+  50%{
+    transform: translateY(20%);
+  }
+  100%{
+    transform: translateY(-20%);
+  }
+}

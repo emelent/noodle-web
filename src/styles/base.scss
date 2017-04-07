@@ -1,0 +1,20 @@
+body{
+  padding: 0px;
+  margin: 0px;
+  background: #efefef;
+  box-sizing: border-box;
+  font-family: Raleway;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+*:active, *:focus{
+  outline: none;
+}
+
+a{
+  text-decoration: none;
+  color: inherit;
+}

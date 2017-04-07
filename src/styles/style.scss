@@ -1,0 +1,37 @@
+@import 'fonts';
+@import 'base';
+@import 'animation';
+
+@import 'components';
+
+
+/* MEDIA QUERIES*/
+
+/*phones*/
+@media (max-width:479px) {
+  .hide-xs{
+    display: none !important;
+  }
+}
+
+/*tablet*/
+@media (min-width:480px) and (max-width:991px) {
+  .hide-sm{
+    display: none !important;
+  }
+}
+
+/*monitor*/
+@media (min-width:992px) and (max-width:1199px) {
+  .hide-md{
+    display: none !important;
+  }
+}
+
+/*large monitor*/
+@media (min-width:1200px) {
+  .hide-lg{
+    display: none !important;
+  }
+}
+
