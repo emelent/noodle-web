@@ -56,7 +56,7 @@ const states = {
   LOGOUT_PENDING    : fromJS({
                         token,
                         login: {
-                          pending: true,
+                          pending: false,
                           error: null
                         },
                         logout:{
@@ -68,7 +68,7 @@ const states = {
                         token,
                         login: {
                           pending: false,
-                          error
+                          error: null
                         },
                         logout:{
                           pending: false,
@@ -79,7 +79,7 @@ const states = {
 
 describe('user reducer', () => {
 
-  /* test login pending */
+  //test login pending 
   generateTest(
     //description
     `handles ${type.LOGIN_PENDING} action`,
@@ -91,7 +91,7 @@ describe('user reducer', () => {
     states.LOGIN_PENDING
   );
 
-  /* test login fulfilled*/
+   //test login fulfilled
   generateTest(
     `handles ${type.LOGIN_FULFILLED} action`,
     [{
@@ -102,7 +102,7 @@ describe('user reducer', () => {
     states.LOGIN_FULFILLED
   );
 
-  /* test login rejected*/
+   //test login rejected
   generateTest(
     `handles ${type.LOGIN_REJECTED} action`,
     [{
@@ -111,6 +111,33 @@ describe('user reducer', () => {
     }],
     states.LOGIN_PENDING,
     states.LOGIN_REJECTED
+  );
+
+   //test logout pending
+  generateTest(
+    `handles ${type.LOGOUT_PENDING} action`,
+    [{type: type.LOGOUT_PENDING}],
+    states.LOGIN_FULFILLED,
+    states.LOGOUT_PENDING
+  );
+
+   //test logout fulfilled
+  generateTest(
+    `handles ${type.LOGOUT_FULFILLED} action`,
+    [{type: type.LOGOUT_FULFILLED}],
+    states.LOGOUT_PENDING,
+    states.LOGOUT_FULFILLED
+  );
+
+   //test logout rejected
+  generateTest(
+    `handles ${type.LOGOUT_REJECTED} action`,
+    [{
+      type: type.LOGOUT_REJECTED,
+      payload: {error}
+    }],
+    states.LOGOUT_PENDING,
+    states.LOGOUT_REJECTED
   );
 
 });

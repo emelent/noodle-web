@@ -26,6 +26,7 @@ export const type = {
   LOGOUT_PENDING  : 'LOG_OUT_PENDING',
   LOGOUT_FULFILLED: 'LOG_OUT_FULFILLED',
   LOGOUT_REJECTED : 'LOG_OUT_REJECTED',
+  REFRESH_TOKEN   : 'REFRESH_TOKEN'
 };
 
 // user reducer
@@ -52,27 +53,21 @@ export default function reducer(state=INIT_STATE, action){
       });
 
 		case type.LOGOUT_PENDING:
-			return{
-				...state,
-				logout:{
-					...state.logout,
-					pending: true
-				}
-			};
+      return state.setIn(['logout', 'pending'], true);
 
 		case type.LOGOUT_FULFILLED:
 		case type.USER_RESET:
 			return INIT_STATE;
 
 		case type.LOGOUT_REJECTED:
-			return{
-				...state,
-				logout:{
-					...state.logout,
-					pending: false,
-          error: action.payload.error	
-				}
-			};
+      return state.mergeDeep({
+        logout: {
+          pending: false,
+          error: action.payload.error
+        }
+      });
+    case type.REFRESH_TOKEN:
+      return state.set('token', action.payload.token);
 	}
 
 	return state;
