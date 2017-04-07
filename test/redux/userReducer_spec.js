@@ -15,6 +15,7 @@ const email     = 'test@gmail.com';
 const password  = 'password1';
 const token     = 'token';
 const uid       = 1;
+const error     = 'error';
 
 const states = {
   LOGIN_PENDING     : fromJS({
@@ -56,10 +57,8 @@ const states = {
                         token: null,
 
                         login: {
-                          pending: true,
-                          error: {
-                            message: null
-                          }
+                          pending: false,
+                          error
                         },
 
                         logout:{
@@ -77,7 +76,6 @@ const states = {
 
                         login: {
                           pending: true,
-                          date: null,
                           error: null
                         },
 
@@ -93,23 +91,20 @@ const states = {
                         token,
 
                         login: {
-                          pending: true,
-                          date: null,
-                          error: null
+                          pending: false,
+                          error
                         },
 
                         logout:{
                           pending: false,
-                          error: {
-                            message: null
-                          }
+                          error 
                         }
                       }),
 };
 
 describe('user reducer', () => {
 
-  //test login pending
+  /* test login pending */
   generateTest(
     //description
     `handles ${type.LOGIN_PENDING} action`,
@@ -124,19 +119,26 @@ describe('user reducer', () => {
     states.LOGIN_PENDING
   );
 
-  //test login fulfilled
+  /* test login fulfilled*/
   generateTest(
     `handles ${type.LOGIN_FULFILLED} action`,
     [{
       type: type.LOGIN_FULFILLED,
       payload: {uid, token}
     }],
-    //initial 
     states.LOGIN_PENDING,
     states.LOGIN_FULFILLED
   );
 
-  //generateTest
-    //`handles ${type.LOGIN_REJECTED} action`,
-  //);
+  /* test login rejected*/
+  generateTest(
+    `handles ${type.LOGIN_REJECTED} action`,
+    [{
+      type: type.LOGIN_REJECTED,
+      payload: {error}
+    }],
+    states.LOGIN_PENDING,
+    states.LOGIN_REJECTED
+  );
+
 });

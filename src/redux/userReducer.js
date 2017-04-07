@@ -54,17 +54,13 @@ export default function reducer(state=INIT_STATE, action){
       });
 
 		case type.LOGIN_REJECTED:
-			return{
-				...state,
-				login:{
-					...state.login,
-					pending: false,
-					date: null,
-          error: {
-            message: null
-          }
-				}
-			};
+      return state.mergeDeep({
+        login: {
+          pending: false,
+          error: action.payload.error
+        }
+      });
+
 		case type.LOGOUT_PENDING:
 			return{
 				...state,
@@ -84,9 +80,7 @@ export default function reducer(state=INIT_STATE, action){
 				logout:{
 					...state.logout,
 					pending: false,
-          error: {
-            message: null
-          }
+          error: action.payload.error	
 				}
 			};
 	}
