@@ -14,6 +14,7 @@ function generateTest(description, actions, initialState, expectedState){
 const email     = 'test@gmail.com';
 const password  = 'password1';
 const token     = 'token';
+const refresh_token = 'token2';
 const error     = 'error';
 
 const states = {
@@ -75,6 +76,17 @@ const states = {
                           error 
                         }
                       }),
+  REFRESH_TOKEN     : fromJS({
+                        token: refresh_token,
+                        login: {
+                          pending: false,
+                          error: null
+                        },
+                        logout:{
+                          pending: false,
+                          error: null 
+                        }
+                      })
 };
 
 describe('user reducer', () => {
@@ -140,4 +152,15 @@ describe('user reducer', () => {
     states.LOGOUT_REJECTED
   );
 
+
+   //test refresh token action
+  generateTest(
+    `handles ${type.REFRESH_TOKEN} action`,
+    [{
+      type: type.REFRESH_TOKEN,
+      payload: {token: refresh_token}
+    }],
+    states.LOGIN_FULFILLED,
+    states.REFRESH_TOKEN
+  );
 });
