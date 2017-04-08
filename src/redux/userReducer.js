@@ -2,89 +2,89 @@ import axios from 'axios';
 import {Map, fromJS} from 'immutable';
 import {API_URL} from '../config';
 
-export const INIT_STATE = fromJS({
-	token: null,
-	login: {
-		pending: false,
-		error: null
-	},
-	logout:{
-		pending: false,
-		error: null
-	}
+export const INIT_STATE = Map({
+	token  : null,
+  pending: false,
+  error  : null
 });
 
 // user action types
 export const type = {
-  LOGIN_TYPE      : 'LOG_IN',
-  LOGIN_PENDING   : 'LOG_IN_PENDING',
-  LOGIN_FULFILLED : 'LOG_IN_FULFILLED',
-  LOGIN_REJECTED  : 'LOG_IN_REJECTED',
-  USER_RESET      : 'USER_RESET',
+  LOGIN_TYPE              : 'LOG_IN',
+  LOGIN_PENDING           : 'LOG_IN_PENDING',
+  LOGIN_FULFILLED         : 'LOG_IN_FULFILLED',
+  LOGIN_REJECTED          : 'LOG_IN_REJECTED',
 
-  LOGOUT_TYPE     : 'LOG_OUT',
-  LOGOUT_PENDING  : 'LOG_OUT_PENDING',
-  LOGOUT_FULFILLED: 'LOG_OUT_FULFILLED',
-  LOGOUT_REJECTED : 'LOG_OUT_REJECTED',
+  REFRESH_TYPE            : 'REFRESH_TOKEN',
+  REFRESH_TOKEN_PENDING   : 'REFRESH_TOKEN_PENDING',
+  REFRESH_TOKEN_FULFILLED : 'REFRESH_TOKEN_FULFILLED',
+  REFRESH_TOKEN_REJECTED  : 'REFRESH_TOKEN_REJECTED',
 
-  REFRESH_TOKEN   : 'REFRESH_TOKEN',
-  RE_ENSTATE_TOKEN: 'RE_ENSTATE_TOKEN'
+  RE_ENSTATE_TOKEN        : 'RE_ENSTATE_TOKEN',
+  LOGOUT                  : 'LOGOUT',
+  CLEAR_ERROR             : 'CLEAR_ERROR'
 };
 
 // user reducer
 export default function reducer(state=INIT_STATE, action){
 	switch(action.type){
 		case type.LOGIN_PENDING:
-      return state.setIn(['login', 'pending'], true);
-
-		case type.LOGIN_FULFILLED:
-      return state.mergeDeep({
-        token: action.payload.token,
-        login: {
-          pending:false,
-          error: null
-        }
-      });
-
-		case type.LOGIN_REJECTED:
-      return state.mergeDeep({
-        login: {
-          pending: false,
-          error: action.payload.error
-        }
-      });
-
-		case type.LOGOUT_PENDING:
-      return state.setIn(['logout', 'pending'], true);
-
-		case type.LOGOUT_FULFILLED:
-		case type.USER_RESET:
-			return INIT_STATE;
-
-		case type.LOGOUT_REJECTED:
-      return state.mergeDeep({
-        logout: {
-          pending: false,
-          error: action.payload.error
-        }
-      });
-
-    case type.REFRESH_TOKEN:
-      return state.set('token', action.payload.token);
+      return state.set('pending', true);
 
     case type.RE_ENSTATE_TOKEN:
-      return state.set('token', action.payload.token);
+    case type.REFRESH_TOKEN_FULFILLED:
+		case type.LOGIN_FULFILLED:
+      return state.merge({
+        token: action.payload.token,
+        pending:false,
+        error: null
+      });
+
+    case type.REFRESH_TOKEN_REJECTED:
+		case type.LOGIN_REJECTED:
+      return state.merge({
+        pending: false,
+        error: action.payload.error
+      });
+
+		case type.LOGOUT:
+			return INIT_STATE;
+
+    case type.REFRESH_TOKEN_PENDING:
+      return state.set('pending', true);
+
+    case type.CLEAR_ERROR:
+      return state.set('error', null);
 	}
 
 	return state;
 }
 
-export function attemptLogin(email, password){
+export function userLogIn(email, password){
 	return (dispatch) => {
 		dispatch({
 			type: type.LOGIN_TYPE,
       payload: axios.post(`${API_URL}/auth/login/`, {email, password})
 		});
 	};
+}
+
+export function userRefreshToken(){
+	return (dispatch) => {
+		dispatch({
+			type: type.LOGIN_TYPE,
+      payload: axios.post(`${API_URL}/auth/refresh/`, {email, password})
+		});
+	};
+}
+
+export function userLogOut(){
+  return (dispatch) => {
+    dispatch({type: type.LOGOUT});
+  }
+}
+
+export function userClearError(){
+  return (dispatch) => dispatch({type: type.CLEAR_ERROR});
 }
 

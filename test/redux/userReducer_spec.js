@@ -11,99 +11,49 @@ const refreshToken = 'token2';
 const error         = 'error';
 
 /*
- * map of expected states after an action has 
- *occured
+ * expected states after an action has occured
  */
 const states = {
-  LOGIN_PENDING     : fromJS({
-                        token: null,
-                        login: {
-                          pending: true,
-                          error: null
-                        },
-                        logout:{
-                          pending: false,
-                          error: null
-                        }
-                      }),
+  LOGIN_PENDING: Map({
+    token: null,
+    pending: true,
+    error: null
+  }),
+  LOGIN_FULFILLED: Map({
+    token,
+    pending: false,
+    error: null
+  }),
+  LOGIN_REJECTED: Map({
+    token: null,
+    pending: false,
+    error
+  }),
 
-  LOGIN_FULFILLED   : fromJS({
-                        token,
-                        login: {
-                          pending: false,
-                          error: null
-                        },
-                        logout:{
-                          pending: false,
-                          error: null
-                        }
-                      }),
+  REFRESH_TOKEN_PENDING: Map({
+    token,
+    pending: true,
+    error: null
+  }),
+  REFRESH_TOKEN_FULFILLED: Map({
+    token: refreshToken,
+    pending: false,
+    error: null
+  }),
+  REFRESH_TOKEN_REJECTED: Map({
+    token,
+    pending: false,
+    error
+  }),
 
-  LOGIN_REJECTED    : fromJS({
-                        token: null,
-                        login: {
-                          pending: false,
-                          error
-                        },
-                        logout:{
-                          pending: false,
-                          error: null
-                        }
-                      }),
+  RE_ENSTATE_TOKEN: Map({
+    token,
+    pending: false,
+    error: null
+  }),
 
-  USER_RESET        : INIT_STATE,
-
-  LOGOUT_FULFILLED  : INIT_STATE,
-
-  LOGOUT_PENDING    : fromJS({
-                        token,
-                        login: {
-                          pending: false,
-                          error: null
-                        },
-                        logout:{
-                          pending: true,
-                          error: null
-                        }
-                      }),
-
-  LOGOUT_REJECTED   : fromJS({
-                        token,
-                        login: {
-                          pending: false,
-                          error: null
-                        },
-                        logout:{
-                          pending: false,
-                          error 
-                        }
-                      }),
-
-  REFRESH_TOKEN     : fromJS({
-                        token: refreshToken,
-                        login: {
-                          pending: false,
-                          error: null
-                        },
-                        logout:{
-                          pending: false,
-                          error: null 
-                        }
-                      }),
-
-  RE_ENSTATE_TOKEN  : fromJS({
-                        token: token,
-                        login: {
-                          pending: false,
-                          error: null
-                        },
-                        logout:{
-                          pending: false,
-                          error: null 
-                        }
-                      }),
-
-
+  LOGOUT: INIT_STATE,
+  CLEAR_ERROR: INIT_STATE
 };
 
 //automatically generate state tests
@@ -117,7 +67,7 @@ function generateStateTest(description, actions, initialState, expectedState){
 
 describe('user reducer', () => {
 
-  //test login pending from init state 
+  //test login pending
   generateStateTest(
     //description
     `handles ${type.LOGIN_PENDING} action`,
@@ -129,7 +79,7 @@ describe('user reducer', () => {
     states.LOGIN_PENDING
   );
 
-   //test login fulfilled from login pending
+   //test login fulfilled
   generateStateTest(
     `handles ${type.LOGIN_FULFILLED} action`,
     [{
@@ -140,7 +90,7 @@ describe('user reducer', () => {
     states.LOGIN_FULFILLED
   );
 
-   //test login rejected from login pending
+   //test login rejected
   generateStateTest(
     `handles ${type.LOGIN_REJECTED} action`,
     [{
@@ -151,45 +101,37 @@ describe('user reducer', () => {
     states.LOGIN_REJECTED
   );
 
-   //test logout pending from login fulfilled
+   //test refresh pending from login fulfilled
   generateStateTest(
-    `handles ${type.LOGOUT_PENDING} action`,
-    [{type: type.LOGOUT_PENDING}],
+    `handles ${type.REFRESH_TOKEN_PENDING} action`,
+    [{type: type.REFRESH_TOKEN_PENDING}],
     states.LOGIN_FULFILLED,
-    states.LOGOUT_PENDING
+    states.REFRESH_TOKEN_PENDING
   );
 
-   //test logout fulfilledfrom logout pending
+   //test refresh fulfilled from refresh pending
   generateStateTest(
-    `handles ${type.LOGOUT_FULFILLED} action`,
-    [{type: type.LOGOUT_FULFILLED}],
-    states.LOGOUT_PENDING,
-    states.LOGOUT_FULFILLED
-  );
-
-   //test logout rejected from logout pending
-  generateStateTest(
-    `handles ${type.LOGOUT_REJECTED} action`,
+    `handles ${type.REFRESH_TOKEN_FULFILLED} action`,
     [{
-      type: type.LOGOUT_REJECTED,
-      payload: {error}
-    }],
-    states.LOGOUT_PENDING,
-    states.LOGOUT_REJECTED
-  );
-
-   //test refresh token action from login fulfilled
-  generateStateTest(
-    `handles ${type.REFRESH_TOKEN} action`,
-    [{
-      type: type.REFRESH_TOKEN,
+      type: type.REFRESH_TOKEN_FULFILLED,
       payload: {token: refreshToken}
     }],
-    states.LOGIN_FULFILLED,
-    states.REFRESH_TOKEN
+    states.REFRESH_TOKEN_PENDING,
+    states.REFRESH_TOKEN_FULFILLED
   );
 
-   //test re-enstate token action from init state
+   //test refresh rejected from refresh pending
+  generateStateTest(
+    `handles ${type.REFRESH_TOKEN_REJECTED} action`,
+    [{
+      type: type.REFRESH_TOKEN_REJECTED,
+      payload: {error}
+    }],
+    states.REFRESH_TOKEN_PENDING,
+    states.REFRESH_TOKEN_REJECTED
+  );
+
+  //test re-enstate token action from init state
   generateStateTest(
     `handles ${type.RE_ENSTATE_TOKEN} action`,
     [{
@@ -198,5 +140,21 @@ describe('user reducer', () => {
     }],
     INIT_STATE,
     states.RE_ENSTATE_TOKEN
+  );
+
+  //test logout action
+  generateStateTest(
+    `handles ${type.LOGOUT} action`,
+    [{type: type.LOGOUT}],
+    states.LOGIN_FULFILLED,
+    states.LOGOUT
+  );
+
+  //test clear error action
+  generateStateTest(
+    `handles ${type.CLEAR_ERROR} action`,
+    [{type: type.CLEAR_ERROR}],
+    states.LOGIN_REJECTED,
+    states.CLEAR_ERROR
   );
 });
