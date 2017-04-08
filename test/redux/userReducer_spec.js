@@ -7,7 +7,7 @@ import reducer, {type, INIT_STATE} from '../../src/redux/userReducer';
 const email         = 'test@gmail.com';
 const password      = 'password1';
 const token         = 'token';
-const refreshToken = 'token2';
+const refreshToken  = 'token2';
 const error         = 'error';
 
 /*
