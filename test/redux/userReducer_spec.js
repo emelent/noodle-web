@@ -13,7 +13,7 @@ const error         = 'error';
 /*
  * expected state after an action has occured
  */
-const state = {
+const states = {
   LOGIN_PENDING: Map({
     token: null,
     pending: true,
@@ -56,105 +56,94 @@ const state = {
   CLEAR_ERROR: INIT_STATE
 };
 
-//automatically generate state tests
-function generateStateTest(description, actions, initialState, expectedState){
-  it(description, () => {
-    let finalState = actions.reduce(reducer, initialState);
-    expect(finalState).to.equal(expectedState);
-  });
-}
-
 
 describe('user reducer', () => {
 
   //test login pending
-  generateStateTest(
-    //description
-    `handles ${type.LOGIN_PENDING} action`,
-    //actions
-    [{type: type.LOGIN_PENDING}],
-    //initial state
-    INIT_STATE,
-    //expected state
-    state.LOGIN_PENDING
-  );
+  it('handles LOGIN_PENDING action', () => {
+    let state = INIT_STATE;
+    let action = {type: type.LOGIN_PENDING};
+    let nextState = reducer(state, action);
+    expect(nextState).to.equal(states.LOGIN_PENDING);
+  });
 
    //test login fulfilled
-  generateStateTest(
-    `handles ${type.LOGIN_FULFILLED} action`,
-    [{
+  it('handles LOGIN_FULFILLED action', () => {
+    let state = states.LOGIN_PENDING;
+    let action = {
       type: type.LOGIN_FULFILLED,
       payload: {token}
-    }],
-    state.LOGIN_PENDING,
-    state.LOGIN_FULFILLED
-  );
+    };
+    let nextState = reducer(state, action);
+    expect(nextState).to.equal(states.LOGIN_FULFILLED);
+  });
 
    //test login rejected
-  generateStateTest(
-    `handles ${type.LOGIN_REJECTED} action`,
-    [{
+  it('handles LOGIN_REJECTED action', () => {
+    let state = states.LOGIN_PENDING;
+    let action = {
       type: type.LOGIN_REJECTED,
       payload: {error}
-    }],
-    state.LOGIN_PENDING,
-    state.LOGIN_REJECTED
-  );
+    };
+    let nextState = reducer(state, action);
+    expect(nextState).to.equal(states.LOGIN_REJECTED);
+  });
 
-   //test refresh pending from login fulfilled
-  generateStateTest(
-    `handles ${type.REFRESH_TOKEN_PENDING} action`,
-    [{type: type.REFRESH_TOKEN_PENDING}],
-    state.LOGIN_FULFILLED,
-    state.REFRESH_TOKEN_PENDING
-  );
+   //test refresh token pending from login fulfilled
+  it('handles REFRESH_TOKEN_PENDING action', () => {
+    let state = states.LOGIN_FULFILLED;
+    let action = {type: type.REFRESH_TOKEN_PENDING};
+    let nextState = reducer(state, action);
+    expect(nextState).to.equal(states.REFRESH_TOKEN_PENDING);
+  });
 
    //test refresh fulfilled from refresh pending
-  generateStateTest(
-    `handles ${type.REFRESH_TOKEN_FULFILLED} action`,
-    [{
+  it('handles REFRESH_TOKEN_FULFILLED action', () => {
+    let state = states.REFRESH_TOKEN_PENDING;
+    let action = {
       type: type.REFRESH_TOKEN_FULFILLED,
       payload: {token: refreshToken}
-    }],
-    state.REFRESH_TOKEN_PENDING,
-    state.REFRESH_TOKEN_FULFILLED
-  );
+    };
+    let nextState = reducer(state, action);
+    expect(nextState).to.equal(states.REFRESH_TOKEN_FULFILLED);
+  });
+
 
    //test refresh rejected from refresh pending
-  generateStateTest(
-    `handles ${type.REFRESH_TOKEN_REJECTED} action`,
-    [{
+  it('handles REFRESH_TOKEN_REJECTED action', () => {
+    let state = states.REFRESH_TOKEN_PENDING;
+    let action = {
       type: type.REFRESH_TOKEN_REJECTED,
       payload: {error}
-    }],
-    state.REFRESH_TOKEN_PENDING,
-    state.REFRESH_TOKEN_REJECTED
-  );
+    };
+    let nextState = reducer(state, action);
+    expect(nextState).to.equal(states.REFRESH_TOKEN_REJECTED);
+  });
 
   //test re-enstate token action from init state
-  generateStateTest(
-    `handles ${type.RE_ENSTATE_TOKEN} action`,
-    [{
+  it('handles RE_ENSTATE_TOKEN action', () => {
+    let state = INIT_STATE;
+    let action = {
       type: type.RE_ENSTATE_TOKEN,
       payload: {token}
-    }],
-    INIT_STATE,
-    state.RE_ENSTATE_TOKEN
-  );
+    };
+    let nextState = reducer(state, action);
+    expect(nextState).to.equal(states.RE_ENSTATE_TOKEN);
+  });
 
-  //test logout action
-  generateStateTest(
-    `handles ${type.LOGOUT} action`,
-    [{type: type.LOGOUT}],
-    state.LOGIN_FULFILLED,
-    state.LOGOUT
-  );
+  //test logout action from login fulfilled
+  it('handles LOGOUT action', () => {
+    let state = states.LOGIN_FULFILLED;
+    let action = {type: type.LOGOUT};
+    let nextState = reducer(state, action);
+    expect(nextState).to.equal(states.LOGOUT);
+  });
 
-  //test clear error action
-  generateStateTest(
-    `handles ${type.CLEAR_ERROR} action`,
-    [{type: type.CLEAR_ERROR}],
-    state.LOGIN_REJECTED,
-    state.CLEAR_ERROR
-  );
+  //test clear error action from login rejected
+  it('handles CLEAR_ERROR action', () => {
+    let state = states.LOGIN_REJECTED;
+    let action = {type: type.CLEAR_ERROR};
+    let nextState = reducer(state, action);
+    expect(nextState).to.equal(states.CLEAR_ERROR);
+  });
 });
