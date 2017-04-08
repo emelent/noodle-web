@@ -26,7 +26,9 @@ export const type = {
   LOGOUT_PENDING  : 'LOG_OUT_PENDING',
   LOGOUT_FULFILLED: 'LOG_OUT_FULFILLED',
   LOGOUT_REJECTED : 'LOG_OUT_REJECTED',
-  REFRESH_TOKEN   : 'REFRESH_TOKEN'
+
+  REFRESH_TOKEN   : 'REFRESH_TOKEN',
+  RE_ENSTATE_TOKEN: 'RE_ENSTATE_TOKEN'
 };
 
 // user reducer
@@ -66,7 +68,11 @@ export default function reducer(state=INIT_STATE, action){
           error: action.payload.error
         }
       });
+
     case type.REFRESH_TOKEN:
+      return state.set('token', action.payload.token);
+
+    case type.RE_ENSTATE_TOKEN:
       return state.set('token', action.payload.token);
 	}
 
