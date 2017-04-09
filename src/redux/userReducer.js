@@ -102,7 +102,7 @@ function clearToken(){
 
 // user reducer
 export default function reducer(state=INIT_STATE, action){
-	switch(action.actionType){
+	switch(action.type){
 		case actionType.LOGIN_PENDING:
       return state.set('pending', true);
 
