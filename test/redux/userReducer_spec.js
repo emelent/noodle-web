@@ -1,7 +1,7 @@
 import {expect} from 'chai';
 import {Map, fromJS} from 'immutable';
 
-import reducer, {type, INIT_STATE} from '../../src/redux/userReducer';
+import reducer, {actionType, INIT_STATE} from '../../src/redux/userReducer';
 
 
 const email         = 'test@gmail.com';
@@ -62,7 +62,7 @@ describe('user reducer', () => {
   //test login pending
   it('handles LOGIN_PENDING action', () => {
     let state = INIT_STATE;
-    let action = {type: type.LOGIN_PENDING};
+    let action = {type: actionType.LOGIN_PENDING};
     let nextState = reducer(state, action);
     expect(nextState).to.equal(states.LOGIN_PENDING);
   });
@@ -71,7 +71,7 @@ describe('user reducer', () => {
   it('handles LOGIN_FULFILLED action', () => {
     let state = states.LOGIN_PENDING;
     let action = {
-      type: type.LOGIN_FULFILLED,
+      type: actionType.LOGIN_FULFILLED,
       payload: {token}
     };
     let nextState = reducer(state, action);
@@ -82,7 +82,7 @@ describe('user reducer', () => {
   it('handles LOGIN_REJECTED action', () => {
     let state = states.LOGIN_PENDING;
     let action = {
-      type: type.LOGIN_REJECTED,
+      type: actionType.LOGIN_REJECTED,
       payload: {error}
     };
     let nextState = reducer(state, action);
@@ -92,7 +92,7 @@ describe('user reducer', () => {
    //test refresh token pending from login fulfilled
   it('handles REFRESH_TOKEN_PENDING action', () => {
     let state = states.LOGIN_FULFILLED;
-    let action = {type: type.REFRESH_TOKEN_PENDING};
+    let action = {type: actionType.REFRESH_TOKEN_PENDING};
     let nextState = reducer(state, action);
     expect(nextState).to.equal(states.REFRESH_TOKEN_PENDING);
   });
@@ -101,7 +101,7 @@ describe('user reducer', () => {
   it('handles REFRESH_TOKEN_FULFILLED action', () => {
     let state = states.REFRESH_TOKEN_PENDING;
     let action = {
-      type: type.REFRESH_TOKEN_FULFILLED,
+      type: actionType.REFRESH_TOKEN_FULFILLED,
       payload: {token: refreshToken}
     };
     let nextState = reducer(state, action);
@@ -113,7 +113,7 @@ describe('user reducer', () => {
   it('handles REFRESH_TOKEN_REJECTED action', () => {
     let state = states.REFRESH_TOKEN_PENDING;
     let action = {
-      type: type.REFRESH_TOKEN_REJECTED,
+      type: actionType.REFRESH_TOKEN_REJECTED,
       payload: {error}
     };
     let nextState = reducer(state, action);
@@ -124,7 +124,7 @@ describe('user reducer', () => {
   it('handles RE_ENSTATE_TOKEN action', () => {
     let state = INIT_STATE;
     let action = {
-      type: type.RE_ENSTATE_TOKEN,
+      type: actionType.RE_ENSTATE_TOKEN,
       payload: {token}
     };
     let nextState = reducer(state, action);
@@ -134,7 +134,7 @@ describe('user reducer', () => {
   //test logout action from login fulfilled
   it('handles LOGOUT action', () => {
     let state = states.LOGIN_FULFILLED;
-    let action = {type: type.LOGOUT};
+    let action = {type: actionType.LOGOUT};
     let nextState = reducer(state, action);
     expect(nextState).to.equal(states.LOGOUT);
   });
@@ -142,7 +142,7 @@ describe('user reducer', () => {
   //test clear error action from login rejected
   it('handles CLEAR_ERROR action', () => {
     let state = states.LOGIN_REJECTED;
-    let action = {type: type.CLEAR_ERROR};
+    let action = {type: actionType.CLEAR_ERROR};
     let nextState = reducer(state, action);
     expect(nextState).to.equal(states.CLEAR_ERROR);
   });

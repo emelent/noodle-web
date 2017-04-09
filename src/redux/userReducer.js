@@ -13,21 +13,21 @@ export const INIT_STATE = Map({
   error  : null
 });
 
-// user action types
-export const type = {
-  LOGIN_TYPE              : 'LOG_IN',
+// user action actionTypes
+export const actionType = {
+  LOGIN_actionType              : 'LOG_IN',
   LOGIN_PENDING           : 'LOG_IN_PENDING',
   LOGIN_FULFILLED         : 'LOG_IN_FULFILLED',
   LOGIN_REJECTED          : 'LOG_IN_REJECTED',
 
-  REFRESH_TYPE            : 'REFRESH_TOKEN',
+  REFRESH_actionType            : 'REFRESH_TOKEN',
   REFRESH_TOKEN_PENDING   : 'REFRESH_TOKEN_PENDING',
   REFRESH_TOKEN_FULFILLED : 'REFRESH_TOKEN_FULFILLED',
   REFRESH_TOKEN_REJECTED  : 'REFRESH_TOKEN_REJECTED',
 
   RE_ENSTATE_TOKEN        : 'RE_ENSTATE_TOKEN',
   LOGOUT                  : 'LOGOUT',
-  CLEAR_ERROR             : 'CLEAR_ERROR'
+  CLEAR_ERROR             : 'CLEAR_USER_ERROR'
 };
 
 //user action creators
@@ -36,7 +36,7 @@ export const actionCreator = {
   login: (email, password) => {
     return (dispatch) => {
       dispatch({
-        type: type.LOGIN_TYPE,
+        type: actionType.LOGIN_actionType,
         payload: axios.post(`${API_URL}/auth/login/`, {email, password})
       });
     };
@@ -46,7 +46,7 @@ export const actionCreator = {
   logout: () => {
     clearToken();
     return (dispatch) => {
-      dispatch({type: type.LOGOUT});
+      dispatch({type: actionType.LOGOUT});
     }
   },
 
@@ -54,7 +54,7 @@ export const actionCreator = {
   refreshToken: () => {
     return (dispatch) => {
       dispatch({
-        type: type.LOGIN_TYPE,
+        type: actionType.LOGIN_actionType,
         payload: axios.post(`${API_URL}/auth/refresh/`, {email, password})
       });
     };
@@ -63,7 +63,7 @@ export const actionCreator = {
   //clears error from state
   clearError: () => {
     return (dispatch) => {
-      dispatch({type: type.CLEAR_ERROR});
+      dispatch({type: actionType.CLEAR_ERROR});
     };
   },
 
@@ -72,7 +72,7 @@ export const actionCreator = {
     let token = retrieveToken();
     if(token !== null && token !== undefined){
       return (dispatch) => dispatch({
-        type: type.RE_ENSTATE_TOKEN,
+        type: actionType.RE_ENSTATE_TOKEN,
         payload: {token}
       });
     }
@@ -102,35 +102,35 @@ function clearToken(){
 
 // user reducer
 export default function reducer(state=INIT_STATE, action){
-	switch(action.type){
-		case type.LOGIN_PENDING:
+	switch(action.actionType){
+		case actionType.LOGIN_PENDING:
       return state.set('pending', true);
 
-    case type.RE_ENSTATE_TOKEN:
+    case actionType.RE_ENSTATE_TOKEN:
       return state.set('token', action.payload.token);
 
-    case type.REFRESH_TOKEN_FULFILLED:
-		case type.LOGIN_FULFILLED:
+    case actionType.REFRESH_TOKEN_FULFILLED:
+		case actionType.LOGIN_FULFILLED:
       cacheToken(action.payload.token);
       return state.merge({
         token: action.payload.token,
         pending:false
       });
 
-    case type.REFRESH_TOKEN_REJECTED:
-		case type.LOGIN_REJECTED:
+    case actionType.REFRESH_TOKEN_REJECTED:
+		case actionType.LOGIN_REJECTED:
       return state.merge({
         pending: false,
         error: action.payload.error
       });
 
-		case type.LOGOUT:
+		case actionType.LOGOUT:
 			return INIT_STATE;
 
-    case type.REFRESH_TOKEN_PENDING:
+    case actionType.REFRESH_TOKEN_PENDING:
       return state.set('pending', true);
 
-    case type.CLEAR_ERROR:
+    case actionType.CLEAR_ERROR:
       return state.set('error', null);
 	}
 
