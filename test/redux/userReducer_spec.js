@@ -57,7 +57,7 @@ const states = {
 };
 
 
-describe('user reducer', () => {
+describe('User Reducer', () => {
 
   //test login pending
   it('handles LOGIN_PENDING action', () => {
