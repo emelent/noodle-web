@@ -1,3 +1,4 @@
+import {hashHistory} from 'react-router';
 import axios from 'axios';
 import URLSearchParams from 'url-search-params';
 import {Map, fromJS} from 'immutable';
@@ -41,10 +42,13 @@ export const actionCreator = {
     params.append('email', email);
     params.append('password', password);
     axios.post(`${API_URL}/auth/login/`, params)
-      .then(response => dispatch({
+      .then(response => {
+        dispatch({
           type: actionType.LOGIN_FULFILLED,
           payload: response.data
-        }))
+        });
+        hashHistory.push('/select-modules');
+      })
       .catch(error => dispatch({
         type: actionType.LOGIN_REJECTED,
         payload: {error: error.response.data}
@@ -82,6 +86,7 @@ export const actionCreator = {
         type: actionType.RE_ENSTATE_TOKEN,
         payload: {token}
       });
+      hashHistory.push('/select-modules');
     }
   }
 };
@@ -123,13 +128,13 @@ export default function reducer(state=INIT_STATE, action){
       return state.set('pending', true);
 
     case actionType.RE_ENSTATE_TOKEN:
+      setAuthorizationHeader(action.payload.token);
       return state.set('token', action.payload.token);
 
     case actionType.REFRESH_TOKEN_FULFILLED:
 		case actionType.LOGIN_FULFILLED:
       cacheToken(action.payload.token);
       setAuthorizationHeader(action.payload.token);
-
       return state.merge({
         token: action.payload.token,
         pending:false
