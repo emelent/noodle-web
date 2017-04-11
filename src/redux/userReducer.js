@@ -1,4 +1,5 @@
 import axios from 'axios';
+import URLSearchParams from 'url-search-params';
 import {Map, fromJS} from 'immutable';
 import {API_URL} from '../config';
 
@@ -33,21 +34,27 @@ export const actionType = {
 //user action creators
 export const actionCreator = {
   //login action creator
-  login: (email, password) => {
-    return (dispatch) => {
-      dispatch({
-        type: actionType.LOGIN_actionType,
-        payload: axios.post(`${API_URL}/auth/login/`, {email, password})
-      });
-    };
+  login: (email, password) => dispatch => {
+    //dispatch pending
+    dispatch({type: actionType.LOGIN_PENDING});
+    let params = new URLSearchParams();
+    params.append('email', email);
+    params.append('password', password);
+    axios.post(`${API_URL}/auth/login/`, params)
+      .then(response => dispatch({
+          type: actionType.LOGIN_FULFILLED,
+          payload: response.data
+        }))
+      .catch(error => dispatch({
+        type: actionType.LOGIN_REJECTED,
+        payload: {error: error.response.data}
+      }));
   },
 
   //clears user's api token from state and cache
-  logout: () => {
+  logout: () => dispatch => {
     clearToken();
-    return (dispatch) => {
-      dispatch({type: actionType.LOGOUT});
-    }
+    dispatch({type: actionType.LOGOUT});
   },
 
   //refreshes user's api token
@@ -55,7 +62,7 @@ export const actionCreator = {
     return (dispatch) => {
       dispatch({
         type: actionType.LOGIN_actionType,
-        payload: axios.post(`${API_URL}/auth/refresh/`, {email, password})
+        payload: axios.post(`${API_URL}/auth/refresh/`)
       });
     };
   },
@@ -81,23 +88,34 @@ export const actionCreator = {
   }
 };
 
+function setAuthorizationHeader(token){
+  axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+}
+
+function clearAuthorizationHeader(token){
+  axios.defaults.headers.common['Authorization'] = undefined;
+}
 //cache token
 function cacheToken(token){
-  if(this && this.hasOwnProperty('window')){
+  try{
     window.localStorage.setItem(TOKEN_KEY, token);
-  }
+  }catch(e){}
 }
 
 //retrieve token from cache
 function retrieveToken(){
-  if(this && this.hasOwnProperty('window'))
+  try{
     return window.localStorage.getItem(TOKEN_KEY);
+  }catch(e){}
+
+  return null;
 }
 
 //clear token from cache
 function clearToken(){
-  if(this && this.hasOwnProperty('window'))
+  try{
     window.localStorage.removeItem(TOKEN_KEY);
+  }catch(e){}
 }
 
 // user reducer
@@ -112,6 +130,8 @@ export default function reducer(state=INIT_STATE, action){
     case actionType.REFRESH_TOKEN_FULFILLED:
 		case actionType.LOGIN_FULFILLED:
       cacheToken(action.payload.token);
+      setAuthorizationHeader(action.payload.token);
+
       return state.merge({
         token: action.payload.token,
         pending:false
@@ -125,6 +145,7 @@ export default function reducer(state=INIT_STATE, action){
       });
 
 		case actionType.LOGOUT:
+      clearAuthorizationHeader();
 			return INIT_STATE;
 
     case actionType.REFRESH_TOKEN_PENDING:
