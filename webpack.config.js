@@ -7,6 +7,15 @@ var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
     devtool: 'eval-source-map',
+    // Server Configuration options
+    devServer: {
+      contentBase: 'src/', // Relative directory for base of server
+      devtool: 'eval',
+      hot: true, // Live-reload
+      inline: true,
+      port: 8080, // Port Number
+      host: '0.0.0.0',
+    },
     entry: [
         'webpack-dev-server/client?http://localhost:8080',
         'webpack/hot/only-dev-server',
