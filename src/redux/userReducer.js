@@ -58,33 +58,31 @@ export const actionCreator = {
   },
 
   //refreshes user's api token
-  refreshToken: () => {
-    return (dispatch) => {
-      dispatch({
-        type: actionType.LOGIN_actionType,
-        payload: axios.post(`${API_URL}/auth/refresh/`)
-      });
-    };
+  refreshToken: () => dispatch => {
+    dispatch({type: actionType.REFRESH_TOKEN_PENDING});
+    axios.get(`${API_URL}/auth/refresh/`)
+      .then(response => dispatch({
+          type: actionType.REFRESH_TOKEN_FULFILLED,
+          payload: response.data
+        }))
+      .catch(error => dispatch({
+        type: actionType.REFRESH_TOKEN_REJECTED,
+        payload: {error: error.response.data}
+      }));
   },
 
   //clears error from state
-  clearError: () => {
-    return (dispatch) => {
-      dispatch({type: actionType.CLEAR_ERROR});
-    };
-  },
+  clearError: () => (dispatch) => dispatch({type: actionType.CLEAR_ERROR}),
 
   //updates state token with cached token
-  reEnstateToken: () => {
+  reEnstateToken: () => dispatch => {
     let token = retrieveToken();
     if(token !== null && token !== undefined){
-      return (dispatch) => dispatch({
+      dispatch({
         type: actionType.RE_ENSTATE_TOKEN,
         payload: {token}
       });
     }
-
-    return () => {};
   }
 };
 
