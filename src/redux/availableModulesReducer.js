@@ -19,18 +19,25 @@ export const actionType = {
 
   FILTER                  : 'FILTER_AV',
 
-  SET_HIDDEN_MODULES            : 'SET_HIDDEN_MODULES',
+  SET_HIDDEN_MODULES      : 'SET_HIDDEN_MODULES',
 
   CLEAR_ERROR             : 'CLEAR_AV_MODULES_ERROR'
 };
 
 export const actionCreator = {
-  fetchModules: () => {
-    //TODO fix up axios headers after login
-    return dispatch => dispatch({
-      type: actionType.FETCH_TYPE,
-      payload: axios.get(`${API_URL}/modules/`) 
-    });
+  fetchModules: () => dispatch => {
+    dispatch({type: actionType.FETCH_MODULES_PENDING});
+    axios.get(`${API_URL}/modules/`)
+      .then(response => dispatch({
+        type: actionType.FETCH_MODULES_FULFILLED,
+        payload: response.data
+      }))
+      .catch(error => {
+        dispatch({
+          type: actionType.FETCH_MODULES_REJECTED,
+          payload: error.response.data
+        });
+      });
   },
 
   setHiddenModules: modules => dispatch => dispatch({
