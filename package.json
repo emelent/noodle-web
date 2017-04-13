@@ -70,6 +70,7 @@
     "sass-loader": "^3.2.0",
     "stats-webpack-plugin": "^0.3.1",
     "style-loader": "^0.13.1",
+    "underscore": "^1.8.3",
     "url-loader": "^0.5.7",
     "url-search-params": "^0.7.0",
     "webpack": "^1.13.0",
