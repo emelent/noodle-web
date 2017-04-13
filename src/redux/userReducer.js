@@ -49,10 +49,26 @@ export const actionCreator = {
         });
         hashHistory.push('/select-modules');
       })
-      .catch(error => dispatch({
-        type: actionType.LOGIN_REJECTED,
-        payload: {error: error.response.data}
-      }));
+      .catch(error => {
+        let msg;
+        if(error.response){
+          let data = error.response.data;
+          msg = data;
+          if(typeof data === 'object'){
+            msg = '';
+            for(let prop in data){
+              msg += data[prop];
+              break;
+            }
+          }
+        }else{
+          msg = error.message;
+        }
+        dispatch({
+          type: actionType.LOGIN_REJECTED,
+          payload: {error: msg}
+        });
+      });
   },
 
   //clears user's api token from state and cache
@@ -91,13 +107,16 @@ export const actionCreator = {
   }
 };
 
+//set axios authorization header
 function setAuthorizationHeader(token){
   axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 }
 
-function clearAuthorizationHeader(token){
+//clear axios authorization header
+function clearAuthorizationHeader(){
   axios.defaults.headers.common['Authorization'] = undefined;
 }
+
 //cache token
 function cacheToken(token){
   try{
