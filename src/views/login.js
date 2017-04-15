@@ -12,7 +12,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
- login : userAction.login
+  login : userAction.login,
+  reEnstateToken: userAction.reEnstateToken,
 }, dispatch);
 
 
@@ -30,23 +31,32 @@ class LoginView extends React.Component{
     this.props.login(email, password);
   }
 
+  componentDidMount(){
+    //attempt to reload token from cache
+    this.props.reEnstateToken();
+  }
+
   render() {
     return (
-      <div>
+      <div style={style.container}>
         <h2>Log In</h2>
         <div>
           <TextField
+            style={style.textfield}
             floatingLabelText="Email"
             ref={el => this.tfEmail = el}
           /><br/>
 
           <TextField
+            style={style.textfield}
             floatingLabelText="Password"
             type="password"
             ref={el => this.tfPassword = el}
           /><br/>
         </div>
-        <RaisedButton primary={true} label="Log In" 
+        <RaisedButton 
+          style={style.loginButton}
+          primary={true} label="Log In" 
           onTouchTap={this.handleLoginClick}/>
       </div>
     );
@@ -54,4 +64,19 @@ class LoginView extends React.Component{
 
 };
 
+const style = {
+  container: {
+    width: '300px',
+    margin: '50px auto'
+  },
+  textfield: {
+    margin: '5px 0px',
+    width: '100%',
+  },
+  loginButton: {
+    margin: '10px 0px',
+    float: 'right'
+  }
+
+};
 export default LoginView;
