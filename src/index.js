@@ -27,6 +27,7 @@ ReactDOM.render(
       <Provider store={store}>
         <Router history={history}>
           <Route path="/" component={LoginView} />
+          <Route path="/login" component={LoginView} />
           <Route path="/select-modules" component={SelectModulesView} />
         </Router>
       </Provider>
