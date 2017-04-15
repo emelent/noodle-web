@@ -1,52 +1,53 @@
 import {expect} from 'chai';
-import {Map, fromJS} from 'immutable';
+import {fromJS} from 'immutable';
+import jwtDecode from 'jwt-decode';
 
 import reducer, {actionType, INIT_STATE} from '../../src/redux/userReducer';
 
 
-const email         = 'test@gmail.com';
-const password      = 'password1';
-const token         = 'token';
-const refreshToken  = 'token2';
-const error         = 'error';
+const email           = 'test@gmail.com';
+const password        = 'password1';
+const token           = 'token';
+const refreshToken    = 'token2';
+const error           = 'error';
 
 /*
  * expected state after an action has occured
  */
 const states = {
-  LOGIN_PENDING: Map({
+  LOGIN_PENDING: fromJS({
     token: null,
     pending: true,
     error: null
   }),
-  LOGIN_FULFILLED: Map({
+  LOGIN_FULFILLED: fromJS({
     token,
     pending: false,
     error: null
   }),
-  LOGIN_REJECTED: Map({
+  LOGIN_REJECTED: fromJS({
     token: null,
     pending: false,
     error
   }),
 
-  REFRESH_TOKEN_PENDING: Map({
+  REFRESH_TOKEN_PENDING: fromJS({
     token,
     pending: true,
     error: null
   }),
-  REFRESH_TOKEN_FULFILLED: Map({
+  REFRESH_TOKEN_FULFILLED: fromJS({
     token: refreshToken,
     pending: false,
     error: null
   }),
-  REFRESH_TOKEN_REJECTED: Map({
+  REFRESH_TOKEN_REJECTED: fromJS({
     token,
     pending: false,
     error
   }),
 
-  RE_ENSTATE_TOKEN: Map({
+  RE_ENSTATE_TOKEN: fromJS({
     token,
     pending: false,
     error: null

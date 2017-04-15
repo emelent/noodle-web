@@ -1,12 +1,10 @@
 import {hashHistory} from 'react-router';
 import axios from 'axios';
+import jwtDecode from 'jwt-decode';
 import URLSearchParams from 'url-search-params';
 import {Map, fromJS} from 'immutable';
-import {API_URL} from '../config';
+import {API_URL, TOKEN_KEY, user} from '../config';
 
-
-//key for token in cache
-const TOKEN_KEY = 'TOKEN_KEY';
 
 //initial state
 export const INIT_STATE = Map({
@@ -17,12 +15,10 @@ export const INIT_STATE = Map({
 
 // user action actionTypes
 export const actionType = {
-  LOGIN_actionType              : 'LOG_IN',
   LOGIN_PENDING           : 'LOG_IN_PENDING',
   LOGIN_FULFILLED         : 'LOG_IN_FULFILLED',
   LOGIN_REJECTED          : 'LOG_IN_REJECTED',
 
-  REFRESH_actionType            : 'REFRESH_TOKEN',
   REFRESH_TOKEN_PENDING   : 'REFRESH_TOKEN_PENDING',
   REFRESH_TOKEN_FULFILLED : 'REFRESH_TOKEN_FULFILLED',
   REFRESH_TOKEN_REJECTED  : 'REFRESH_TOKEN_REJECTED',
@@ -97,11 +93,21 @@ export const actionCreator = {
   //updates state token with cached token
   reEnstateToken: () => dispatch => {
     let token = retrieveToken();
+
     if(token !== null && token !== undefined){
+      let decoded = jwtDecode(token);
+
+      //check if token is expired
+      if(decoded.exp < Date.now() / 1000){
+        clearToken();
+        return;
+      }
+      //refresh token if active token found
       dispatch({
         type: actionType.RE_ENSTATE_TOKEN,
         payload: {token}
       });
+      actionCreator.refreshToken()(dispatch);
       hashHistory.push('/select-modules');
     }
   }
@@ -154,6 +160,7 @@ export default function reducer(state=INIT_STATE, action){
 		case actionType.LOGIN_FULFILLED:
       cacheToken(action.payload.token);
       setAuthorizationHeader(action.payload.token);
+
       return state.merge({
         token: action.payload.token,
         pending:false
