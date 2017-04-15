@@ -4,7 +4,7 @@ import TextField from 'material-ui/TextField';
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux';
 
-import {actionCreator as userAction} from '../redux/userReducer';
+import {login, reEnstateToken} from '../redux/userActions';
 
 
 const mapStateToProps = (state) => ({
@@ -12,8 +12,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
-  login : userAction.login,
-  reEnstateToken: userAction.reEnstateToken,
+  login,
+  reEnstateToken
 }, dispatch);
 
 
