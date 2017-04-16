@@ -15,6 +15,9 @@ import {
   fetchAvailableModules, 
   fetchSelectedModules,
   updateSelectedModules,
+  addTemporaryModule,
+  removeTemporaryModule,
+  clearTemporaryModules,
   clearAvailableModulesError,
   clearSelectedModulesError
 } from '../redux/modulesActionCreators';
@@ -38,27 +41,18 @@ const rightIconMenu = (
   </IconMenu>
 );
 
-const listExample = (
-<List>
-  <Subheader>Available Modules</Subheader>
-  <ListItem
-    rightIconButton={rightIconMenu}
-    primaryText="COS 132"
-    secondaryText={"Imperative Programming"}
-    secondaryTextLines={1}
-  />
-  <Divider inset={false} />
-</List>
-);
 
 const mapStateToProps = state => ({
-  modules: state.availableModules
+  modules: state.modules
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   fetchSelectedModules,
   fetchAvailableModules,
   updateSelectedModules,
+  addTemporaryModule,
+  removeTemporaryModule,
+  clearTemporaryModules,
   clearAvailableModulesError,
   clearSelectedModulesError
 }, dispatch);
@@ -70,16 +64,74 @@ class SelectModulesView extends React.Component{
   }
 
   componentDidMount(){
+    this.props.fetchAvailableModules();
+    //this.props.fetchSelectedModules();
   }
 
+  renderAvailableModuleList(){
+    const available = this.props.modules.getIn(['available', 'modules']);
+    const selected = this.props.modules.getIn(['selected', 'modules']);
+    const temp = this.props.modules.get('tempModules');
+
+    const filtered = available.filterNot(module => (
+      selected.has(module) || temp.has(module)
+    ));
+
+    const items = filtered.map((module) => {
+      let code = module.code.slice(0,3) + ' ' + module.code.slice(3);
+      return (
+        <div key={module.id}>
+          <ListItem
+            rightIconButton={rightIconMenu}
+            primaryText={
+              <span style={styles.moduleCode}>{code.toUpperCase()}</span>
+            }
+            secondaryText={
+             <p>
+               <span style={styles.moduleName}>
+                 {module.name.toUpperCase()}
+               </span><br/>
+               <span style={styles.moduleDescription}>
+                {module.description}
+               </span> 
+              </p>
+            }
+            secondaryTextLines={2}
+          />
+          <Divider inset={false} />
+        </div>);
+    });
+
+    return (
+      <List>
+        <Subheader>Available Modules</Subheader>
+        {items}
+      </List>
+    );
+  }
   render(){
+    const availableModulesList = this.renderAvailableModuleList();
     return (
       <div>
         <h2>Select Modules</h2>
-        {listExample}
+        <div>
+          {availableModulesList}
+        </div>
       </div>
     );
   }
 }
 
+const styles = {
+  moduleCode: {
+    color: darkBlack,
+    textTransform: 'upperCase',
+  },
+  moduleName: {
+    color: darkBlack,
+    textTransform: 'upperCase'
+  },
+  moduleDescription: {
+  }
+};
 export default SelectModulesView;
