@@ -4,7 +4,7 @@ import TextField from 'material-ui/TextField';
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux';
 
-import {login, reEnstateToken} from '../redux/userActions';
+import {login, reEnstateToken} from '../redux/userActionCreators';
 
 
 const mapStateToProps = (state) => ({

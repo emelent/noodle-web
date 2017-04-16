@@ -17,7 +17,7 @@ import {
   updateSelectedModules,
   clearAvailableModulesError,
   clearSelectedModulesError
-} from '../redux/moduleActions';
+} from '../redux/modulesActionCreators';
 
 
 const iconButtonElement = (
