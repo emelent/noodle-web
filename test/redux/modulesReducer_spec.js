@@ -7,10 +7,13 @@ import reducer, {actionType, INIT_STATE} from '../../src/redux/modulesReducer';
 const availableModules = [1,2,3,4];
 const selectedModules = [1, 2];
 const selectedModulesUpdate = [3, 4];
+const tempModules = [1];
+const tempModule = 1;
 const error = 'error';
 
 const states = {
   FETCH_AV_MODULES_PENDING: fromJS({
+    tempModules: [],
     available: {
       modules: [],
       pending: true,
@@ -23,6 +26,7 @@ const states = {
     }
   }),
   FETCH_AV_MODULES_FULFILLED: fromJS({
+    tempModules: [],
     available: {
       modules: availableModules,
       pending: false,
@@ -35,6 +39,7 @@ const states = {
     }
   }),
   FETCH_AV_MODULES_REJECTED: fromJS({
+    tempModules: [],
     available: {
       modules: [],
       pending: false,
@@ -48,6 +53,7 @@ const states = {
   }),  
 
   FETCH_SE_MODULES_PENDING: fromJS({
+    tempModules: [],
     available: {
       modules: [],
       pending: false,
@@ -60,6 +66,7 @@ const states = {
     }
   }),
   FETCH_SE_MODULES_FULFILLED: fromJS({
+    tempModules: [],
     available: {
       modules: [],
       pending: false,
@@ -72,6 +79,7 @@ const states = {
     }
   }),
   FETCH_SE_MODULES_REJECTED: fromJS({
+    tempModules: [],
     available: {
       modules: [],
       pending: false,
@@ -85,6 +93,7 @@ const states = {
   }),
 
   UPDATE_SE_MODULES_PENDING: fromJS({
+    tempModules: [],
     available: {
       modules: [],
       pending: false,
@@ -97,6 +106,7 @@ const states = {
     }
   }),
   UPDATE_SE_MODULES_FULFILLED: fromJS({
+    tempModules: [],
     available: {
       modules: [],
       pending: false,
@@ -109,6 +119,7 @@ const states = {
     }
   }),
   UPDATE_SE_MODULES_REJECTED: fromJS({
+    tempModules: [],
     available: {
       modules: [],
       pending: false,
@@ -123,6 +134,7 @@ const states = {
 
 
   CLEAR_AV_ERROR: fromJS({
+    tempModules: [],
     available: {
       modules: [],
       pending: false,
@@ -136,6 +148,49 @@ const states = {
   }),
 
   CLEAR_SE_ERROR: fromJS({
+    tempModules: [],
+    available: {
+      modules: [],
+      pending: false,
+      error: null
+    },
+    selected: {
+      modules: [],
+      pending: false,
+      error: null
+    }
+  }),
+
+  ADD_TEMPORARY_MODULE: fromJS({
+    tempModules,
+    available: {
+      modules: [],
+      pending: false,
+      error: null
+    },
+    selected: {
+      modules: [],
+      pending: false,
+      error: null
+    }
+  }),
+
+  REMOVE_TEMPORARY_MODULE: fromJS({
+    tempModules: [],
+    available: {
+      modules: [],
+      pending: false,
+      error: null
+    },
+    selected: {
+      modules: [],
+      pending: false,
+      error: null
+    }
+  }),
+
+  CLEAR_TEMPORARY_MODULES: fromJS({
+    tempModules: [],
     available: {
       modules: [],
       pending: false,
@@ -226,6 +281,34 @@ describe('Modules Reducer', () => {
   });
 
 
+  it('handles ADD_TEMPORARY_MODULE action', () => {
+    let state = INIT_STATE;
+    let action = {
+      type: actionType.ADD_TEMPORARY_MODULE,
+      payload: tempModule
+    };
+    let nextState = reducer(state, action);
+    expect(nextState).to.equal(states.ADD_TEMPORARY_MODULE);
+  });
+
+  it('handles REMOVE_TEMPORARY_MODULE action', () => {
+    let state = states.ADD_TEMPORARY_MODULE;
+    let action = {
+      type: actionType.REMOVE_TEMPORARY_MODULE,
+      payload: tempModule
+    };
+    let nextState = reducer(state, action);
+    expect(nextState).to.equal(states.REMOVE_TEMPORARY_MODULE);
+  });
+
+  it('handles CLEAR_TEMPORARY_MODULES action', () => {
+    let state = states.ADD_TEMPORARY_MODULE;
+    let action = {
+      type: actionType.CLEAR_TEMPORARY_MODULES
+    };
+    let nextState = reducer(state, action);
+    expect(nextState).to.equal(states.CLEAR_TEMPORARY_MODULES);
+  });
 
   it('handles CLEAR_AV_ERROR action', () => {
     let state = states.FETCH_AV_MODULES_REJECTED;

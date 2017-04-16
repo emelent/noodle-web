@@ -2,6 +2,7 @@ import {fromJS, List} from 'immutable';
 
 
 export const INIT_STATE = fromJS({
+  tempModules: [],
   available: {
     modules: [],
     pending: false,
@@ -29,13 +30,17 @@ export const actionType = {
   UPDATE_SE_MODULES_FULFILLED : 'UPDATE_SE_MODULES_FULFILLED',
   UPDATE_SE_MODULES_REJECTED  : 'UPDATE_SE_MODULES_REJECTED',
 
+  ADD_TEMPORARY_MODULE        : 'ADD_TEMPORARY_MODULE',
+  REMOVE_TEMPORARY_MODULE     : 'REMOVE_TEMPORARY_MODULE',
+  CLEAR_TEMPORARY_MODULES     : 'CLEAR_TEMPORARY_MODULES',
+
   CLEAR_SE_ERROR              : 'CLEAR_SE_MODULES_ERROR',
   CLEAR_AV_ERROR              : 'CLEAR_AV_MODULES_ERROR',
 };
 
 export default function reducer(state=INIT_STATE, action){
   switch(action.type){
-    //handles fetching of available modules
+    //handle fetching of available modules
     case actionType.FETCH_AV_MODULES_PENDING:
       return state.setIn(['available','pending'], true);
     case actionType.FETCH_AV_MODULES_FULFILLED:
@@ -53,7 +58,7 @@ export default function reducer(state=INIT_STATE, action){
         }
       });
 
-    //handles fetching of selected modules
+    //handle fetching of selected modules
     case actionType.FETCH_SE_MODULES_PENDING:
       return state.setIn(['selected','pending'], true);
     case actionType.FETCH_SE_MODULES_FULFILLED:
@@ -72,7 +77,7 @@ export default function reducer(state=INIT_STATE, action){
       });
 
 
-    //handles updateing of available modules
+    //handle updating of available modules
     case actionType.UPDATE_SE_MODULES_PENDING:
       return state.setIn(['selected','pending'], true);
     case actionType.UPDATE_SE_MODULES_FULFILLED:
@@ -90,7 +95,17 @@ export default function reducer(state=INIT_STATE, action){
         }
       });
 
-    //handles clearing of errors
+    //handle adding/removing of temporary modules
+    case actionType.ADD_TEMPORARY_MODULE:
+      return state.set('tempModules', state.get('tempModules').push(action.payload));
+
+    case actionType.REMOVE_TEMPORARY_MODULE:
+      let list = state.get('tempModules');
+      return state.set('tempModules', list.delete(list.indexOf(action.payload)));
+    case actionType.CLEAR_TEMPORARY_MODULES:
+      return state.set('tempModules', state.get('tempModules').clear());
+
+    //handle clearing of errors
     case actionType.CLEAR_AV_ERROR:
       return state.setIn(['available', 'error'], null);
     case actionType.CLEAR_SE_ERROR:
