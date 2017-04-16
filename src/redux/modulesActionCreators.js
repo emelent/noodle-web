@@ -8,7 +8,6 @@ import {API_URL} from '../config';
 
 
 
-
 export const fetchAvailableModules = () => (dispatch) => {
   dispatch({type: actionType.FETCH_AV_MODULES_PENDING});
   axios.get(`${API_URL}/modules/`)
@@ -55,6 +54,20 @@ export const updateSelectedModules = (modules) => (dispatch) => {
       });
     });
 };
+
+export const addTemporaryModule = (module) => (dispatch) => dispatch({
+  type: actionType.ADD_TEMPORARY_MODULE,
+  payload: module
+});
+
+export const removeTemporaryModule = (module) => (dispatch) => dispatch({
+  type: actionType.REMOVE_TEMPORARY_MODULE,
+  payload: module
+});
+
+export const clearTemporaryModules = () => (dispatch) => dispatch({
+  type: actionType.CLEAR_TEMPORARY_MODULES
+});
 
 export const clearAvailableModulesError = () => (dispatch) => dispatch({
   type: actionType.CLEAR_AV_ERROR
