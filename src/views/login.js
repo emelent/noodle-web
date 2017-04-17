@@ -1,9 +1,11 @@
 import React from 'react';
-import RaisedButton from 'material-ui/RaisedButton';
-import TextField from 'material-ui/TextField';
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux';
 import {hashHistory} from 'react-router';
+
+import { Paper, TextField, RaisedButton } from 'material-ui';
+import ActionAccountCicle
+from 'material-ui/svg-icons/action/account-circle';
 
 import {isAuthenticated, login, reEnstateToken} from '../redux/action_creators/user';
 
@@ -23,14 +25,8 @@ class LoginView extends React.Component{
 
   constructor(props){
     super(props);
-    this.handleLoginClick = this.handleLoginClick.bind(this);
   }
 
-  handleLoginClick(){
-    let email = this.tfEmail.getValue();
-    let password= this.tfPassword.getValue();
-    this.props.login(email, password);
-  }
 
   componentDidMount(){
     //attempt to reload token from cache
@@ -38,47 +34,58 @@ class LoginView extends React.Component{
   }
 
   render() {
-
     return (
-      <div style={style.container}>
-        <h2>Log In</h2>
-        <div>
-          <TextField
-            style={style.textfield}
-            floatingLabelText="Email"
-            ref={el => this.tfEmail = el}
-          /><br/>
-
-          <TextField
-            style={style.textfield}
-            floatingLabelText="Password"
-            type="password"
-            ref={el => this.tfPassword = el}
-          /><br/>
-        </div>
-        <RaisedButton 
-          style={style.loginButton}
-          primary={true} label="Log In" 
-          onTouchTap={this.handleLoginClick}/>
+      <div style={styles.center}>
+        <Paper style={styles.paper}>
+          <ActionAccountCicle style={{ height: 100, width: 100 }}/><br/>
+          <TextField ref='identity'
+                     hintText='email'
+                     floatingLabelText='email'
+                     onKeyDown={this.submit} /><br/>
+          <TextField ref='password'
+                     hintText='password'
+                     floatingLabelText='password'
+                     type='password'
+                     onKeyDown={this.submit} /><br />
+          <RaisedButton style={styles.submit}
+                        label='Login'
+                        onTouchTap={this.submit}
+                        primary />
+        </Paper>
       </div>
     );
   }
 
-};
+  submit = (event) => {
+    const identity = this.refs.identity.state.hasValue;
+    const password = this.refs.password.state.hasValue;
 
-const style = {
-  container: {
-    width: '300px',
-    margin: '50px auto'
-  },
-  textfield: {
-    margin: '5px 0px',
-    width: '100%',
-  },
-  loginButton: {
-    margin: '10px 0px',
-    float: 'right'
+    if (event.type === 'keydown' && event.keyCode !== 13) return;
+
+    this.props.login(identity, password);
   }
 
 };
+
+const styles = {
+  center: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
+    padding: 10
+  },
+  paper: {
+    maxHeight: 400,
+    maxWidth: 400,
+    textAlign: 'center',
+    padding: '20px 40px'
+  },
+  submit: {
+    marginTop: 10,
+    marginBottom: 20,
+    width: '100%'
+  }
+};
+
 export default LoginView;
