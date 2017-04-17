@@ -5,10 +5,10 @@ import {hashHistory} from 'react-router';
 import { Paper, TextField, RaisedButton } from 'material-ui';
 import ActionAccountCicle from 'material-ui/svg-icons/action/account-circle';
 
-import {isAuthenticated, login, reEnstateToken} from '../redux/action_creators/user';
+import {isAuthenticated, login, reEnstateToken} from '../redux/action_creators/auth';
 
 const mapStateToProps = (state) => ({
-  user: state.user
+  auth: state.auth
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({

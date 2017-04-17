@@ -2,7 +2,7 @@ import {expect} from 'chai';
 import {fromJS} from 'immutable';
 import jwtDecode from 'jwt-decode';
 
-import reducer, {actionType, INIT_STATE} from '../../../src/redux/reducers/user';
+import reducer, {actionType, INIT_STATE} from '../../../src/redux/reducers/auth';
 
 
 const email           = 'test@gmail.com';
