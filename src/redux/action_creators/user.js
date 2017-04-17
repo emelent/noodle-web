@@ -5,7 +5,7 @@ import jwtDecode from 'jwt-decode';
 import URLSearchParams from 'url-search-params';
 
 import {actionType} from '../reducers/user';
-import {API_URL, TOKEN_KEY, user} from '../../config';
+import {API_URL, TOKEN_KEY} from '../../config';
 
 
 //set axios authorization header
