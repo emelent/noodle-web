@@ -2,13 +2,10 @@ import React from 'react';
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux';
 import {hashHistory} from 'react-router';
-
 import { Paper, TextField, RaisedButton } from 'material-ui';
-import ActionAccountCicle
-from 'material-ui/svg-icons/action/account-circle';
+import ActionAccountCicle from 'material-ui/svg-icons/action/account-circle';
 
 import {isAuthenticated, login, reEnstateToken} from '../redux/action_creators/user';
-
 
 const mapStateToProps = (state) => ({
   user: state.user

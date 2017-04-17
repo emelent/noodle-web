@@ -8,8 +8,8 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 
 import store from './redux/store';
-import LoginView from './views/login';
-import AddModulesView from './views/addModules';
+import LoginView from './views/Login';
+import AddModulesView from './views/AddModules';
 
 
 import './styles/style.scss';
