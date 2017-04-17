@@ -11,15 +11,15 @@ module.exports = {
     devServer: {
       contentBase: 'src/', // Relative directory for base of server
       devtool: 'eval',
-      hot: true, // Live-reload
+      //hot: true, // Live-reload
       inline: true,
       port: 8080, // Port Number
       host: '0.0.0.0',
     },
     entry: [
-        'webpack-dev-server/client?http://localhost:8080',
-        'webpack/hot/only-dev-server',
-        'react-hot-loader/patch',
+        //'webpack-dev-server/client?http://localhost:8080',
+        //'webpack/hot/only-dev-server',
+        //'react-hot-loader/patch',
         path.join(__dirname, 'src/index.js')
     ],
     output: {
@@ -38,7 +38,7 @@ module.exports = {
         filename: 'index.html'
       }),
       new webpack.optimize.OccurenceOrderPlugin(),
-      new webpack.HotModuleReplacementPlugin(),
+      //new webpack.HotModuleReplacementPlugin(),
       new webpack.NoErrorsPlugin(),
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify('development')
