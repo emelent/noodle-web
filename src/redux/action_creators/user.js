@@ -4,8 +4,8 @@ import axios from 'axios';
 import jwtDecode from 'jwt-decode';
 import URLSearchParams from 'url-search-params';
 
-import {actionType} from './userReducer';
-import {API_URL, TOKEN_KEY, user} from '../config';
+import {actionType} from '../reducers/user';
+import {API_URL, TOKEN_KEY, user} from '../../config';
 
 
 //set axios authorization header
@@ -34,6 +34,14 @@ function retrieveToken(){
   return null;
 }
 
+//retrieve decoded jwt
+function retrieveDecodedJwt(){
+  let token = retrieveToken();
+  if(token)
+    return jwtDecode(token);
+  return null;
+}
+
 //clear token from cache
 function clearToken(){
   try{
@@ -57,7 +65,7 @@ export const login = (email, password) => dispatch => {
         type: actionType.LOGIN_FULFILLED,
         payload: response.data
       });
-      hashHistory.push('/select-modules');
+      hashHistory.push('/add-modules');
     })
     .catch(error => {
       let msg;
@@ -100,6 +108,7 @@ export const refreshToken = () => dispatch => {
         type: actionType.REFRESH_TOKEN_FULFILLED,
         payload: response.data
       });
+      hashHistory.push('/add-modules');
     })
     .catch(error => dispatch({
       type: actionType.REFRESH_TOKEN_REJECTED,
@@ -114,23 +123,19 @@ export const clearError = () => (dispatch) => dispatch({
 
 //updates state token with cached token
 export const reEnstateToken = () => dispatch => {
-  let token = retrieveToken();
-
-  if(token !== null && token !== undefined){
-    let decoded = jwtDecode(token);
-
-    //check if token expired
-    if(decoded.exp < Date.now() / 1000){
-      clearToken();
-      return;
-    }
-    //refresh token
+  if(isAuthenticated()){
+    let token = retrieveToken();
+    setAuthorizationHeader(token);
     dispatch({
       type: actionType.RE_ENSTATE_TOKEN,
       payload: {token}
     });
     refreshToken()(dispatch);
-    hashHistory.push('/select-modules');
   }
 }
 
+//check if current user is authenticated
+export const isAuthenticated = () => {
+  let jwt = retrieveDecodedJwt();
+  return (jwt && jwt.exp < Date.now() / 1000);
+}

@@ -1,7 +1,7 @@
 import {expect} from 'chai';
 import {List, fromJS} from 'immutable';
 
-import reducer, {actionType, INIT_STATE} from '../../src/redux/modulesReducer';
+import reducer, {actionType, INIT_STATE} from '../../../src/redux/reducers/modules';
 
 
 const availableModules = [1,2,3,4];

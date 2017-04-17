@@ -9,7 +9,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import store from './redux/store';
 import LoginView from './views/login';
-import SelectModulesView from './views/selectModules';
+import AddModulesView from './views/addModules';
 
 
 import './styles/style.scss';
@@ -25,7 +25,7 @@ const App = () => (
       <Router history={history}>
         <Route path="/" component={LoginView} />
         <Route path="/login" component={LoginView} />
-        <Route path="/select-modules" component={SelectModulesView} />
+        <Route path="/add-modules" component={AddModulesView} />
       </Router>
     </Provider>
   </MuiThemeProvider>

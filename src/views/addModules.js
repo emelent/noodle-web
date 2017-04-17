@@ -20,7 +20,7 @@ import {
   clearTemporaryModules,
   clearAvailableModulesError,
   clearSelectedModulesError
-} from '../redux/modulesActionCreators';
+} from '../redux/action_creators/modules';
 
 
 const iconButtonElement = (
@@ -58,14 +58,14 @@ const mapDispatchToProps = dispatch => bindActionCreators({
 }, dispatch);
 
 @connect(mapStateToProps, mapDispatchToProps)
-class SelectModulesView extends React.Component{
+class AddModulesView extends React.Component{
   constructor(props){
     super(props);
   }
 
   componentDidMount(){
     this.props.fetchAvailableModules();
-    //this.props.fetchSelectedModules();
+    this.props.fetchSelectedModules();
   }
 
   renderAvailableModuleList(){
@@ -134,4 +134,4 @@ const styles = {
   moduleDescription: {
   }
 };
-export default SelectModulesView;
+export default AddModulesView;

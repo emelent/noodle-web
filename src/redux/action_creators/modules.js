@@ -3,8 +3,8 @@ import {hashHistory} from 'react-router';
 import axios from 'axios';
 import URLSelectedarchParams from 'url-search-params';
 
-import {actionType} from './modulesReducer';
-import {API_URL} from '../config';
+import {actionType} from '../reducers/modules';
+import {API_URL} from '../../config';
 
 
 
@@ -25,17 +25,17 @@ export const fetchAvailableModules = () => (dispatch) => {
 
 export const fetchSelectedModules = () => (dispatch) => {
   dispatch({type: actionType.FETCH_SE_MODULES_PENDING});
-  axios.get(`${API_URL}/user/modules/`)
-    .then((response) => dispatch({
-      type: actionType.FETCH_SE_MODULES_FULFILLED,
-      payload: response.data
-    }))
-    .catch((error) => {
-      dispatch({
-        type: actionType.FETCH_SE_MODULES_REJECTED,
-        payload: error.response.data
-      });
-    });
+  //axios.get(`${API_URL}/user/modules/`)
+    //.then((response) => dispatch({
+      //type: actionType.FETCH_SE_MODULES_FULFILLED,
+      //payload: response.data
+    //}))
+    //.catch((error) => {
+      //dispatch({
+        //type: actionType.FETCH_SE_MODULES_REJECTED,
+        //payload: error.response.data
+      //});
+    //});
 };
 
 export const updateSelectedModules = (modules) => (dispatch) => {

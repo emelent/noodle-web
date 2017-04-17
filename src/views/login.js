@@ -3,8 +3,9 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux';
+import {hashHistory} from 'react-router';
 
-import {login, reEnstateToken} from '../redux/userActionCreators';
+import {isAuthenticated, login, reEnstateToken} from '../redux/action_creators/user';
 
 
 const mapStateToProps = (state) => ({
@@ -37,6 +38,7 @@ class LoginView extends React.Component{
   }
 
   render() {
+
     return (
       <div style={style.container}>
         <h2>Log In</h2>
