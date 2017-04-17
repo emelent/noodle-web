@@ -21,7 +21,7 @@ export const actionType = {
 
   RE_ENSTATE_TOKEN        : 'RE_ENSTATE_TOKEN',
   LOGOUT                  : 'LOGOUT',
-  CLEAR_ERROR             : 'CLEAR_USER_ERROR'
+  CLEAR_ERROR             : 'CLEAR_AUTH_ERROR'
 };
 
 
