@@ -54,12 +54,12 @@ class LoginView extends React.Component{
   }
 
   submit = (event) => {
-    const identity = this.refs.identity.state.hasValue;
-    const password = this.refs.password.state.hasValue;
+    const {identity, password} = this.refs;
 
     if (event.type === 'keydown' && event.keyCode !== 13) return;
-
-    this.props.login(identity, password);
+    console.log('identity =>', identity.getValue());
+    console.log('password =>', password.getValue());
+    this.props.login(identity.getValue(), password.getValue());
   }
 
 };
